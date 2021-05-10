@@ -230,6 +230,8 @@ public ListNode swapPairs(ListNode head) {
     return node.next;
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/117664507-6de77300-b1d4-11eb-9072-03a6d73b8c08.png)
+
 
 ##  7. 链表求和
 

@@ -325,6 +325,11 @@ private boolean isEqual(ListNode l1, ListNode l2) {
     return true;
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/117782446-37613500-b274-11eb-8951-f51627bf193a.png)
+![image](https://user-images.githubusercontent.com/47047330/117782508-46e07e00-b274-11eb-942b-fc39cdd152ac.png)
+
+
+
 
 ##  9. 分隔链表
 

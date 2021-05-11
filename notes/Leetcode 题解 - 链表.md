@@ -357,11 +357,11 @@ public ListNode[] splitListToParts(ListNode root, int k) {
     }
     int mod = N % k;
     int size = N / k;
-    ListNode[] ret = new ListNode[k];
+    ListNode[] ret = new ListNode[k];  //一个矩阵，有k个链表
     cur = root;
     for (int i = 0; cur != null && i < k; i++) {
         ret[i] = cur;
-        int curSize = size + (mod-- > 0 ? 1 : 0);
+        int curSize = size + (mod-- > 0 ? 1 : 0);  //前面有多少段需要加一
         for (int j = 0; j < curSize - 1; j++) {
             cur = cur.next;
         }
@@ -372,6 +372,11 @@ public ListNode[] splitListToParts(ListNode root, int k) {
     return ret;
 }
 ```
+1.先计算出链表的长度
+2.用链表的长度对 k 求商得到 q 和求余得到 r
+3.每段链表的长度就应该是 商 q 加上余数分摊到每段链表上去，即 len = q + (r-- > 0 ? 1 : 0);
+4.最后循环k次将链表断开
+
 
 ##  10. 链表元素按奇偶聚集
 

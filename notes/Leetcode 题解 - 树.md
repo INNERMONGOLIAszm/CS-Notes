@@ -71,7 +71,7 @@ public int maxDepth(TreeNode root) {
    15   7
 ```
 
-平衡树左右子树高度差都小于等于 1
+平衡树左右子树高度差都小于等于 1 (任何节点的两个子树的高度最大差为1)
 
 ```java
 private boolean result = true;
@@ -83,12 +83,36 @@ public boolean isBalanced(TreeNode root) {
 
 public int maxDepth(TreeNode root) {
     if (root == null) return 0;
-    int l = maxDepth(root.left);
-    int r = maxDepth(root.right);
+    int l = maxDepth(root.left); //当前root节点的左子树高度
+    int r = maxDepth(root.right); //当前root节点的右子树高度
     if (Math.abs(l - r) > 1) result = false;
     return 1 + Math.max(l, r);
 }
 ```
+
+```
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        } else {
+            return Math.abs(height(root.left) - height(root.right)) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+        }
+    }
+
+    public int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            return Math.max(height(root.left), height(root.right)) + 1;
+        }
+    }
+}
+
+
+链接：https://leetcode-cn.com/problems/balanced-binary-tree/solution/ping-heng-er-cha-shu-by-leetcode-solution/
+```
+
 
 ### 3. 两节点的最长路径
 

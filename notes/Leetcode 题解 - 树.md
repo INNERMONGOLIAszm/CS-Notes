@@ -271,6 +271,15 @@ private int pathSumStartWithRoot(TreeNode root, int sum) {
     return ret;
 }
 ```
+https://leetcode-cn.com/problems/path-sum-iii/solution/437lu-jing-zong-he-iii-di-gui-fang-shi-by-ming-zhi/
+接下来，我们来考虑再上升的一个层次，题目要求 路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点） 。这就要求我们只需要去求三部分即可：
+
+以当前节点作为头结点的路径数量
+以当前节点的左孩子作为头结点的路径数量
+以当前节点的右孩子作为头结点啊路径数量
+将这三部分之和作为最后结果即可。
+最后的问题是：我们应该如何去求以当前节点作为头结点的路径的数量？这里依旧是按照树的遍历方式模板，每到一个节点让sum-root.val，并判断sum是否为0，如果为零的话，则找到满足条件的一条路径。
+
 
 ### 8. 子树
 

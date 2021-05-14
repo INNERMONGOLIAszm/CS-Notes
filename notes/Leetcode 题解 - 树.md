@@ -441,12 +441,12 @@ public int longestUnivaluePath(TreeNode root) {
 }
 
 private int dfs(TreeNode root){
-    if (root == null) return 0;
-    int left = dfs(root.left);
-    int right = dfs(root.right);
-    int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0;
+    if (root == null) return 0; //如果未null
+    int left = dfs(root.left);  //左子树的最长同值路径，不包括根节点
+    int right = dfs(root.right); //右子树的最长同值路径，不包括根节点
+    int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0; //如果左子树和根节点值相同，需要加一
     int rightPath = root.right != null && root.right.val == root.val ? right + 1 : 0;
-    path = Math.max(path, leftPath + rightPath);
+    path = Math.max(path, leftPath + rightPath); //左右子树和根节点值相同，就应该把两个树加起来。
     return Math.max(leftPath, rightPath);
 }
 ```
@@ -471,16 +471,17 @@ Map<TreeNode, Integer> cache = new HashMap<>();
 
 public int rob(TreeNode root) {
     if (root == null) return 0;
-    if (cache.containsKey(root)) return cache.get(root);
-    int val1 = root.val;
-    if (root.left != null) val1 += rob(root.left.left) + rob(root.left.right);
+    if (cache.containsKey(root)) return cache.get(root); //get(object key);//根据key值找出对应的value值。判断键是否存在：containsKey(object key)。
+    int val1 = root.val;//作为爷爷节点能偷的最多的钱的值
+    if (root.left != null) val1 += rob(root.left.left) + rob(root.left.right); //爷爷节点加孙子，以及孙子的孙子节点
     if (root.right != null) val1 += rob(root.right.left) + rob(root.right.right);
-    int val2 = rob(root.left) + rob(root.right);
-    int res = Math.max(val1, val2);
-    cache.put(root, res);
+    int val2 = rob(root.left) + rob(root.right); //爸爸节点以及，其递归的节点
+    int res = Math.max(val1, val2); //；两种方案那个钱最多
+    cache.put(root, res); //每个节点都储存一次，放置重复计算
     return res;
 }
 ```
+https://leetcode-cn.com/problems/house-robber-iii/solution/san-chong-fang-fa-jie-jue-shu-xing-dong-tai-gui-hu/
 
 ### 14. 找出二叉树中第二小的节点
 
@@ -499,21 +500,23 @@ Input:
 Output: 5
 ```
 
-一个节点要么具有 0 个或 2 个子节点，如果有子节点，那么根节点是最小的节点。
+一个节点要么具有 0 个或 2 个子节点，如果有子节点，那么根节点是最小的节点。自己觉得：根节点不一定等于左子节点。看B站看到的https://www.bilibili.com/video/BV1Vv411C7Wb?from=search&seid=14104940984804716118
 
 ```java
 public int findSecondMinimumValue(TreeNode root) {
     if (root == null) return -1;
-    if (root.left == null && root.right == null) return -1;
-    int leftVal = root.left.val;
+    if (root.left == null && root.right == null) return -1; //该点是叶子节点，没有倒数第二小
+    int leftVal = root.left.val; 
     int rightVal = root.right.val;
-    if (leftVal == root.val) leftVal = findSecondMinimumValue(root.left);
-    if (rightVal == root.val) rightVal = findSecondMinimumValue(root.right);
-    if (leftVal != -1 && rightVal != -1) return Math.min(leftVal, rightVal);
-    if (leftVal != -1) return leftVal;
-    return rightVal;
+    if (leftVal == root.val) leftVal = findSecondMinimumValue(root.left); //找左节点中第二小的
+    if (rightVal == root.val) rightVal = findSecondMinimumValue(root.right); //寻找右节点第二小的值
+    if (leftVal != -1 && rightVal != -1) return Math.min(leftVal, rightVal); //左右两子树都有第二小值，取最小的
+    
+    if (leftVal != -1) return leftVal; //左节点有倒数第二小的，右边没有
+    return rightVal; //右边有，左边没有，返回右节点的值
 }
 ```
+https://leetcode-cn.com/problems/second-minimum-node-in-a-binary-tree/solution/671java-0msdi-gui-hen-jian-ji-e-by-ustcyyw/
 
 ## 层次遍历
 
@@ -527,9 +530,9 @@ public int findSecondMinimumValue(TreeNode root) {
 
 ```java
 public List<Double> averageOfLevels(TreeNode root) {
-    List<Double> ret = new ArrayList<>();
-    if (root == null) return ret;
-    Queue<TreeNode> queue = new LinkedList<>();
+    List<Double> ret = new ArrayList<>(); //动态数组
+    if (root == null) return ret;  
+    Queue<TreeNode> queue = new LinkedList<>(); //链表数组
     queue.add(root);
     while (!queue.isEmpty()) {
         int cnt = queue.size();
@@ -545,6 +548,12 @@ public List<Double> averageOfLevels(TreeNode root) {
     return ret;
 }
 ```
+ArrayList和LinkedList的区别
+![image](https://user-images.githubusercontent.com/47047330/118308512-9d70e500-b51e-11eb-9d48-8cf8f2a8a2b0.png)
+堆栈和queue队列
+![image](https://user-images.githubusercontent.com/47047330/118309318-ae6e2600-b51f-11eb-918c-4df5c097516c.png)
+
+
 
 ### 2. 得到左下角的节点
 
@@ -599,11 +608,17 @@ public int findBottomLeftValue(TreeNode root) {
 
 前序、中序、后序遍只是在对节点访问的顺序有一点不同，其它都相同。
 
+前序：根在前，根左右
+
+中序：根在中，左根右
+
+后序：根在后，左右根
+
 ① 前序
 
 ```java
 void dfs(TreeNode root) {
-    visit(root);
+    visit(root);  //System.out.print(root.data + " -> ");类似的
     dfs(root.left);
     dfs(root.right);
 }
@@ -638,14 +653,14 @@ void dfs(TreeNode root) {
 ```java
 public List<Integer> preorderTraversal(TreeNode root) {
     List<Integer> ret = new ArrayList<>();
-    Stack<TreeNode> stack = new Stack<>();
+    Stack<TreeNode> stack = new Stack<>(); //创建一个栈
     stack.push(root);
     while (!stack.isEmpty()) {
         TreeNode node = stack.pop();
         if (node == null) continue;
         ret.add(node.val);
         stack.push(node.right);  // 先右后左，保证左子树先遍历
-        stack.push(node.left);
+        stack.push(node.left); //root，left，right
     }
     return ret;
 }
@@ -666,12 +681,12 @@ public List<Integer> postorderTraversal(TreeNode root) {
     stack.push(root);
     while (!stack.isEmpty()) {
         TreeNode node = stack.pop();
-        if (node == null) continue;
-        ret.add(node.val);
-        stack.push(node.left);
-        stack.push(node.right);
+        if (node == null) continue; //这个地方忽略了
+        ret.add(node.val); 
+        stack.push(node.left); //先push的后出
+        stack.push(node.right); //所以里面的顺序是root，right，left
     }
-    Collections.reverse(ret);
+    Collections.reverse(ret); //元素顺序颠倒 left，right，root
     return ret;
 }
 ```
@@ -688,14 +703,14 @@ public List<Integer> inorderTraversal(TreeNode root) {
     if (root == null) return ret;
     Stack<TreeNode> stack = new Stack<>();
     TreeNode cur = root;
-    while (cur != null || !stack.isEmpty()) {
+    while (cur != null || !stack.isEmpty()) {  //这个地方是或
         while (cur != null) {
             stack.push(cur);
-            cur = cur.left;
+            cur = cur.left; //一直存储左子节点
         }
         TreeNode node = stack.pop();
         ret.add(node.val);
-        cur = node.right;
+        cur = node.right; 
     }
     return ret;
 }

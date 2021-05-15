@@ -756,22 +756,28 @@ Output:
 ```java
 public TreeNode trimBST(TreeNode root, int L, int R) {
     if (root == null) return null;
-    if (root.val > R) return trimBST(root.left, L, R);
+    if (root.val > R) return trimBST(root.left, L, R); //如果根节点大于有边界，说明他的右节点也大于
     if (root.val < L) return trimBST(root.right, L, R);
     root.left = trimBST(root.left, L, R);
     root.right = trimBST(root.right, L, R);
     return root;
 }
 ```
+如果根结点太小，根结点的左子树的所有结点只会更小，说明根结点及其左子树都应该剪掉，因此直接返回右子树的修剪结果。
+如果根结点太大，根结点的右子树的所有结点只会更大，说明根结点及其右子树都应该剪掉，因此直接返回左子树的修剪结果。
+如果根结点没问题，则递归地修剪左子结点和右子结点。
+如果结点为空，说明无需修剪，直接返回空即可。
+左右子结点都修剪完后，返回自身。
+（太小这个词是可以的，因为递归是从下往上。）
 
 ### 2. 寻找二叉查找树的第 k 个元素
 
 230\. Kth Smallest Element in a BST (Medium)
 
 [Leetcode](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/) / [力扣](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/description/)
+寻找倒数第K小的数
 
-
-中序遍历解法：
+中序遍历解法：（二搜索树的中序遍历是递增序列，只需记录第k个访问的节点的值即可）
 
 ```java
 private int cnt = 0;
@@ -829,8 +835,15 @@ Output: The root of a Greater Tree like this:
             /   \
           20     13
 ```
+二叉累加树：使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
 
 先遍历右子树。
+https://leetcode-cn.com/problems/convert-bst-to-greater-tree/solution/shou-hua-tu-jie-zhong-xu-bian-li-fan-xiang-de-by-x/
+
+1.访问每个节点时，时刻维护变量 sum，保存「比当前节点值大的所有节点值的和」。
+2.二叉搜索树的中序遍历，访问的节点值是递增的。
+3.如果先访问右子树，反向的中序遍历，访问的节点值是递减的，之前访问的节点值都比当前的大，每次累加给 sum 即可。
+
 
 ```java
 private int sum = 0;
@@ -854,6 +867,7 @@ private void traver(TreeNode node) {
 235\. Lowest Common Ancestor of a Binary Search Tree (Easy)
 
 [Leetcode](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/) / [力扣](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)
+二叉搜索树：若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值； 若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值； 
 
 ```html
         _______6______
@@ -891,7 +905,14 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
        7    4
 
 For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/solution/236-er-cha-shu-de-zui-jin-gong-gong-zu-xian-hou-xu/
 ```
+（1） 如果当前结点 rootroot 等于 NULL，则直接返回 NULL
+（2） 如果 rootroot 等于 pp 或者 qq ，那这棵树一定返回 pp 或者 qq
+（3） 然后递归左右子树，因为是递归，使用函数后可认为左右子树已经算出结果，用 leftleft 和 rightright 表示
+（4） 此时若leftleft为空，那最终结果只要看 rightright；若 rightright 为空，那最终结果只要看 leftleft
+（5） 如果 leftleft 和 rightright 都非空，因为只给了 pp 和 qq 两个结点，都非空，说明一边一个，因此 rootroot 是他们的最近公共祖先
+（6） 如果 leftleft 和 rightright 都为空，则返回空（其实已经包含在前面的情况中了）
 
 ```java
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -916,7 +937,7 @@ public TreeNode sortedArrayToBST(int[] nums) {
 private TreeNode toBST(int[] nums, int sIdx, int eIdx){
     if (sIdx > eIdx) return null;
     int mIdx = (sIdx + eIdx) / 2;
-    TreeNode root = new TreeNode(nums[mIdx]);
+    TreeNode root = new TreeNode(nums[mIdx]);   //从上往下建立节点
     root.left =  toBST(nums, sIdx, mIdx - 1);
     root.right = toBST(nums, mIdx + 1, eIdx);
     return root;
@@ -928,6 +949,7 @@ private TreeNode toBST(int[] nums, int sIdx, int eIdx){
 109\. Convert Sorted List to Binary Search Tree (Medium)
 
 [Leetcode](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/description/) / [力扣](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/description/)
+高度平衡 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
 
 ```html
 Given the sorted linked list: [-10,-3,0,5,9],
@@ -945,15 +967,15 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
 public TreeNode sortedListToBST(ListNode head) {
     if (head == null) return null;
     if (head.next == null) return new TreeNode(head.val);
-    ListNode preMid = preMid(head);
+    ListNode preMid = preMid(head); //若果head为4个元素，preMid就是2个元素
     ListNode mid = preMid.next;
-    preMid.next = null;  // 断开链表
+    preMid.next = null;  // 断开链表 head相当于已经断开
     TreeNode t = new TreeNode(mid.val);
     t.left = sortedListToBST(head);
     t.right = sortedListToBST(mid.next);
     return t;
 }
-
+//寻找链表的中位值
 private ListNode preMid(ListNode head) {
     ListNode slow = head, fast = head.next;
     ListNode pre = head;
@@ -1047,7 +1069,7 @@ private void inOrder(TreeNode node) {
     if (node == null) return;
     inOrder(node.left);
     if (preNode != null) minDiff = Math.min(minDiff, node.val - preNode.val);
-    preNode = node;
+    preNode = node; //记录中间节点的值
     inOrder(node.right);
 }
 ```
@@ -1089,6 +1111,7 @@ public int[] findMode(TreeNode root) {
 private void inOrder(TreeNode node, List<Integer> nums) {
     if (node == null) return;
     inOrder(node.left, nums);
+    
     if (preNode != null) {
         if (preNode.val == node.val) curCnt++;
         else curCnt = 1;
@@ -1100,6 +1123,7 @@ private void inOrder(TreeNode node, List<Integer> nums) {
     } else if (curCnt == maxCnt) {
         nums.add(node.val);
     }
+    
     preNode = node;
     inOrder(node.right, nums);
 }

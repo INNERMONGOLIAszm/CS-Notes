@@ -38,7 +38,7 @@ class MyQueue {
         return out.peek();
     }
 
-    private void in2out() {
+    private void in2out() {  //
         if (out.isEmpty()) {
             while (!in.isEmpty()) {
                 out.push(in.pop());

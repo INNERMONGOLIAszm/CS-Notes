@@ -86,6 +86,7 @@ public int findLHS(int[] nums) {
     return longest;
 }
 ```
+https://leetcode-cn.com/problems/longest-harmonious-subsequence/solution/zui-chang-he-xie-zi-xu-lie-by-leetcode/
 
 ## 4. 最长连续序列
 
@@ -112,15 +113,15 @@ public int longestConsecutive(int[] nums) {
     return maxCount(countForNum);
 }
 
-private int forward(Map<Integer, Integer> countForNum, int num) {
+private int forward(Map<Integer, Integer> countForNum, int num) { //返回比num大的连续的数的序列长度
     if (!countForNum.containsKey(num)) {
         return 0;
     }
     int cnt = countForNum.get(num);
-    if (cnt > 1) {
+    if (cnt > 1) { //说明这个数已经记录过了，countForNum里面的重复数
         return cnt;
     }
-    cnt = forward(countForNum, num + 1) + 1;
+    cnt = forward(countForNum, num + 1) + 1; //起点的数字（没有比它小的数），计算以它开头的最长连续子序列
     countForNum.put(num, cnt);
     return cnt;
 }

@@ -61,7 +61,7 @@ s = "anagram", t = "nagaram", return true.
 s = "rat", t = "car", return false.
 ```
 
-可以用 HashMap 来映射字符与出现次数，然后比较两个字符串出现的字符数量是否相同。
+可以用 HashMap 来映射字符与出现次数，然后比较两个字符串出现的字符数量是否相同。（相同的字母按照不同的顺序组成的单词）
 
 由于本题的字符串只包含 26 个小写字符，因此可以使用长度为 26 的整型数组对字符串出现的字符进行统计，不再使用 HashMap。
 
@@ -129,17 +129,20 @@ Given "paper", "title", return true.
 ```
 
 记录一个字符上次出现的位置，如果两个字符串中的字符上次出现的位置一样，那么就属于同构。
+(给定两个字符串 s 和 t，判断它们是否是同构的。
+如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，但字符可以映射自己本身。)（有点不懂）
 
 ```java
 public boolean isIsomorphic(String s, String t) {
     int[] preIndexOfS = new int[256];
     int[] preIndexOfT = new int[256];
     for (int i = 0; i < s.length(); i++) {
-        char sc = s.charAt(i), tc = t.charAt(i);
-        if (preIndexOfS[sc] != preIndexOfT[tc]) {
+        char sc = s.charAt(i), tc = t.charAt(i);  //相同位置上的各自的字符
+        if (preIndexOfS[sc] != preIndexOfT[tc]) {  //两字符，上次储存的顺序是否一致
             return false;
         }
-        preIndexOfS[sc] = i + 1;
+        preIndexOfS[sc] = i + 1; //把两个字符串当前的位置储存下来。
         preIndexOfT[tc] = i + 1;
     }
     return true;
@@ -206,6 +209,7 @@ public boolean isPalindrome(int x) {
     return x == right || x == right / 10;
 }
 ```
+https://leetcode-cn.com/problems/palindrome-number/solution/hui-wen-shu-by-leetcode-solution/
 
 ## 9. 统计二进制字符串中连续 1 和连续 0 数量相同的子字符串个数
 
@@ -237,3 +241,4 @@ public int countBinarySubstrings(String s) {
     return count;
 }
 ```
+https://leetcode-cn.com/problems/count-binary-substrings/solution/ji-shu-er-jin-zhi-zi-chuan-by-leetcode-solution/

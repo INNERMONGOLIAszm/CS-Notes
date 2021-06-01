@@ -320,6 +320,8 @@ Output: 6
 
 题目描述：数组的度定义为元素出现的最高频率，例如上面的数组度为 3。要求找到一个最小的子数组，这个子数组的度和原数组一样。
 
+(数组的度：数组中各元素出现次数的最大值。对于示例二 [1,2,2,3,1,4,2] ：数组中各元素出现的次数为： 1 出现 2 次， 2 出现 3 次， 3 出现 1 次， 4 出现 1 次，所以数组的度为 3（就是元素 2 出现的次数）。
+题目要求的是与 nums 拥有相同大小的度的最短连续子数组的长度。比如对于示例二 [1,2,2,3,1,4,2]，数组的度为 3，它的度为 3 的最短连续子数组是 [2,2,3,1,4,2] ，返回该子数组长度 6）)
 ```java
 public int findShortestSubArray(int[] nums) {
     Map<Integer, Integer> numsCnt = new HashMap<>();
@@ -414,7 +416,7 @@ public int arrayNesting(int[] nums) {
         for (int j = i; nums[j] != -1; ) {
             cnt++;
             int t = nums[j];
-            nums[j] = -1; // 标记该位置已经被访问
+            nums[j] = -1; // 标记该位置已经被访问（？nums被更改了？）
             j = t;
 
         }
@@ -446,7 +448,7 @@ public int maxChunksToSorted(int[] arr) {
     int ret = 0;
     int right = arr[0];
     for (int i = 0; i < arr.length; i++) {
-        right = Math.max(right, arr[i]);
+        right = Math.max(right, arr[i]);  //例子3210/4，前四个数最大值为3，说明必定是0123四个数。
         if (right == i) ret++;
     }
     return ret;

@@ -500,4 +500,5 @@ public int[] countBits(int num) {
     return ret;
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/120475692-47d07f80-c3dc-11eb-8881-473203bdcee9.png)
 

@@ -64,6 +64,7 @@ public int findKthLargest(int[] nums, int k) {
 }
 ```
 
+
 **快速选择**  ：时间复杂度 O(N)，空间复杂度 O(1)
 
 ```java
@@ -91,9 +92,9 @@ private int partition(int[] a, int l, int h) {
         if (i >= j) {
             break;
         }
-        swap(a, i, j);
+        swap(a, i, j); //将后面的排序好
     }
-    swap(a, l, j);
+    swap(a, l, j);//交换轴值与j
     return j;
 }
 
@@ -103,6 +104,8 @@ private void swap(int[] a, int i, int j) {
     a[j] = t;
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/122643070-3b6c5680-d140-11eb-99c5-fa6a960d0674.png)
+
 
 ## 桶排序
 
@@ -124,22 +127,22 @@ Given [1,1,1,2,2,3] and k = 2, return [1,2].
 public int[] topKFrequent(int[] nums, int k) {
     Map<Integer, Integer> frequencyForNum = new HashMap<>();
     for (int num : nums) {
-        frequencyForNum.put(num, frequencyForNum.getOrDefault(num, 0) + 1);
+        frequencyForNum.put(num, frequencyForNum.getOrDefault(num, 0) + 1); //将所有的数出现的频率存起来
     }
-    List<Integer>[] buckets = new ArrayList[nums.length + 1];
+    List<Integer>[] buckets = new ArrayList[nums.length + 1];  //为什么加1
     for (int key : frequencyForNum.keySet()) {
-        int frequency = frequencyForNum.get(key);
-        if (buckets[frequency] == null) {
+        int frequency = frequencyForNum.get(key); //获取不同key的频率
+        if (buckets[frequency] == null) {  //
             buckets[frequency] = new ArrayList<>();
         }
-        buckets[frequency].add(key);
+        buckets[frequency].add(key); //每个频率有的数有哪些
     }
     List<Integer> topK = new ArrayList<>();
     for (int i = buckets.length - 1; i >= 0 && topK.size() < k; i--) {
         if (buckets[i] == null) {
             continue;
         }
-        if (buckets[i].size() <= (k - topK.size())) {
+        if (buckets[i].size() <= (k - topK.size())) {  //已经存了topK.size()，还应该存k - topK.size()
             topK.addAll(buckets[i]);
         } else {
             topK.addAll(buckets[i].subList(0, k - topK.size()));
@@ -147,7 +150,7 @@ public int[] topKFrequent(int[] nums, int k) {
     }
     int[] res = new int[k];
     for (int i = 0; i < k; i++) {
-        res[i] = topK.get(i);
+        res[i] = topK.get(i);  //为什么还要在存一次?因为返回的要是int形
     }
     return res;
 }
@@ -191,7 +194,7 @@ public String frequencySort(String s) {
             continue;
         }
         for (char c : frequencyBucket[i]) {
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) {  //共计i个长度
                 str.append(c);
             }
         }

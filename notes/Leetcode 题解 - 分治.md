@@ -27,8 +27,8 @@ public List<Integer> diffWaysToCompute(String input) {
     for (int i = 0; i < input.length(); i++) {
         char c = input.charAt(i);
         if (c == '+' || c == '-' || c == '*') {
-            List<Integer> left = diffWaysToCompute(input.substring(0, i));
-            List<Integer> right = diffWaysToCompute(input.substring(i + 1));
+            List<Integer> left = diffWaysToCompute(input.substring(0, i));  
+            List<Integer> right = diffWaysToCompute(input.substring(i + 1)); 
             for (int l : left) {
                 for (int r : right) {
                     switch (c) {
@@ -52,6 +52,8 @@ public List<Integer> diffWaysToCompute(String input) {
     return ways;
 }
 ```
+//明白函数是做什么的：这个函数是给定一个字符串，输出这个字符串能计算出的所有结果。
+https://leetcode-cn.com/problems/different-ways-to-add-parentheses/solution/fen-zhi-ji-di-gui-jian-dan-li-by-jia-zi-yun/
 
 ## 2. 不同的二叉搜索树
 
@@ -92,12 +94,12 @@ public List<TreeNode> generateTrees(int n) {
 private List<TreeNode> generateSubtrees(int s, int e) {
     List<TreeNode> res = new LinkedList<TreeNode>();
     if (s > e) {
-        res.add(null);
+        res.add(null);  //这个节点下面不应有子树
         return res;
     }
-    for (int i = s; i <= e; ++i) {
-        List<TreeNode> leftSubtrees = generateSubtrees(s, i - 1);
-        List<TreeNode> rightSubtrees = generateSubtrees(i + 1, e);
+    for (int i = s; i <= e; ++i) { //不同的i当做节点
+        List<TreeNode> leftSubtrees = generateSubtrees(s, i - 1); //左边不同构建子树的结构
+        List<TreeNode> rightSubtrees = generateSubtrees(i + 1, e); //右边不同构建子树的结构
         for (TreeNode left : leftSubtrees) {
             for (TreeNode right : rightSubtrees) {
                 TreeNode root = new TreeNode(i);
@@ -110,3 +112,6 @@ private List<TreeNode> generateSubtrees(int s, int e) {
     return res;
 }
 ```
+本题解 使用了 分治 的思想：
+将 连续的数，一个个遍历，作为根节点，
+每次遍历中，将 左边的数组 和 右边的数组 分别进行构建子树，并接到 当前根节点上

@@ -81,36 +81,38 @@ public int shortestPathBinaryMatrix(int[][] grids) {
         if (grids == null || grids.length == 0 || grids[0].length == 0) {
             return -1;
         }
-        int[][] direction = {{1, -1}, {1, 0}, {1, 1}, {0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {-1, 1}};
-        int m = grids.length, n = grids[0].length;
-        Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
-        queue.add(new Pair<>(0, 0));
-        int pathLength = 0;
+        int[][] direction = {{1, -1}, {1, 0}, {1, 1}, {0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {-1, 1}};  //当前点的八个方向
+        int m = grids.length, n = grids[0].length; //grids用来标记是不是走过
+        Queue<Pair<Integer, Integer>> queue = new LinkedList<>(); //queue用来储存当前层的点的位置
+        queue.add(new Pair<>(0, 0)); //把第一个点存进去
+        int pathLength = 0; //层数就是路径长度
         while (!queue.isEmpty()) {
             int size = queue.size();
-            pathLength++;
+            pathLength++; //走的步数加1
             while (size-- > 0) {
                 Pair<Integer, Integer> cur = queue.poll();
                 int cr = cur.getKey(), cc = cur.getValue();
-                if (grids[cr][cc] == 1) {
+                if (grids[cr][cc] == 1) { //这个点不能走
                     continue;
                 }
-                if (cr == m - 1 && cc == n - 1) {
-                    return pathLength;
+                if (cr == m - 1 && cc == n - 1) {  //到达了右下角
+                    return pathLength; 
                 }
-                grids[cr][cc] = 1; // 标记
+                grids[cr][cc] = 1; // 标记（标记当前点）
                 for (int[] d : direction) {
                     int nr = cr + d[0], nc = cc + d[1];
                     if (nr < 0 || nr >= m || nc < 0 || nc >= n) {
                         continue;
                     }
-                    queue.add(new Pair<>(nr, nc));
+                    queue.add(new Pair<>(nr, nc)); //把8个点都存起来，下次再判断是否为1
                 }
             }
         }
         return -1;
     }
 ```
+https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/solution/1091java-bfszhi-jie-da-bai-98-xiang-jie-by-ustcyyw/
+https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/solution/er-jin-zhi-ju-zhen-zhong-de-zui-duan-lu-lyo5t/
 
 ### 2. 组成整数的最小平方数数量
 
@@ -134,22 +136,22 @@ public int numSquares(int n) {
     Queue<Integer> queue = new LinkedList<>();
     boolean[] marked = new boolean[n + 1];
     queue.add(n);
-    marked[n] = true;
+    marked[n] = true; //n已经用过了
     int level = 0;
     while (!queue.isEmpty()) {
         int size = queue.size();
         level++;
         while (size-- > 0) {
             int cur = queue.poll();
-            for (int s : squares) {
+            for (int s : squares) { //从最小的数开始
                 int next = cur - s;
-                if (next < 0) {
+                if (next < 0) {  //这个数没法拆
                     break;
                 }
                 if (next == 0) {
-                    return level;
+                    return level;  //输出答案
                 }
-                if (marked[next]) {
+                if (marked[next]) { //不把这个next压入（相当于又绕回了原来的路径，必定更长），这个数是12-4=8的8而不是4
                     continue;
                 }
                 marked[next] = true;
@@ -176,6 +178,8 @@ private List<Integer> generateSquares(int n) {
     return squares;
 }
 ```
+https://leetcode-cn.com/problems/perfect-squares/solution/js-yi-dong-de-bfs-by-llf-t-scdn/
+https://leetcode-cn.com/problems/perfect-squares/solution/shu-ju-jie-gou-he-suan-fa-bfsdong-tai-gu-jl6u/
 
 ### 3. 最短单词路径
 
@@ -210,11 +214,11 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
 
 ```java
 public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-    wordList.add(beginWord);
+    wordList.add(beginWord); //把缺少的beginword加进去
     int N = wordList.size();
     int start = N - 1;
     int end = 0;
-    while (end < N && !wordList.get(end).equals(endWord)) {
+    while (end < N && !wordList.get(end).equals(endWord)) { //找到 end的位置
         end++;
     }
     if (end == N) {
@@ -224,21 +228,21 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
     return getShortestPath(graphic, start, end);
 }
 
-private List<Integer>[] buildGraphic(List<String> wordList) {
+private List<Integer>[] buildGraphic(List<String> wordList) { //构建图  //为什么不是List<ArrayList>
     int N = wordList.size();
     List<Integer>[] graphic = new List[N];
     for (int i = 0; i < N; i++) {
         graphic[i] = new ArrayList<>();
         for (int j = 0; j < N; j++) {
             if (isConnect(wordList.get(i), wordList.get(j))) {
-                graphic[i].add(j);
+                graphic[i].add(j); //单词i和所有连接的单词
             }
         }
     }
     return graphic;
 }
 
-private boolean isConnect(String s1, String s2) {
+private boolean isConnect(String s1, String s2) {  //两个单词是不是相差1个字
     int diffCnt = 0;
     for (int i = 0; i < s1.length() && diffCnt <= 1; i++) {
         if (s1.charAt(i) != s2.charAt(i)) {
@@ -263,7 +267,7 @@ private int getShortestPath(List<Integer>[] graphic, int start, int end) {
                 if (next == end) {
                     return path;
                 }
-                if (marked[next]) {
+                if (marked[next]) { //走过的路就不要再走了
                     continue;
                 }
                 marked[next] = true;

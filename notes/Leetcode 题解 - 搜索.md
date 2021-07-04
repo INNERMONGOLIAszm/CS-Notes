@@ -614,28 +614,29 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
 private static final String[] KEYS = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
 public List<String> letterCombinations(String digits) {
-    List<String> combinations = new ArrayList<>();
+    List<String> combinations = new ArrayList<>();  //设置全局列表存储最后的结果
     if (digits == null || digits.length() == 0) {
         return combinations;
     }
-    doCombination(new StringBuilder(), combinations, digits);
+    doCombination(new StringBuilder(), combinations, digits);  //StringBuilder用于储存其中之一的可能结果
     return combinations;
 }
 
-private void doCombination(StringBuilder prefix, List<String> combinations, final String digits) {
-    if (prefix.length() == digits.length()) {
+private void doCombination(StringBuilder prefix, List<String> combinations, final String digits) {  //prefix相当于string
+    if (prefix.length() == digits.length()) { //走完了所有层，完成了一次DFS
         combinations.add(prefix.toString());
         return;
     }
-    int curDigits = digits.charAt(prefix.length()) - '0';
-    String letters = KEYS[curDigits];
+    int curDigits = digits.charAt(prefix.length()) - '0';  // 将index指向的数字转为int，走到了第几层，按下了第几个数字
+    String letters = KEYS[curDigits]; //按下的按键对应的字母
     for (char c : letters.toCharArray()) {
         prefix.append(c);                         // 添加
         doCombination(prefix, combinations, digits);
-        prefix.deleteCharAt(prefix.length() - 1); // 删除
+        prefix.deleteCharAt(prefix.length() - 1); // 删除 //放入prefix后需要恢复，所以将prefix取出，这样下一轮循环可以在prefix的同一个位置放入东西
     }
 }
 ```
+https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/solution/dai-ma-sui-xiang-lu-17-dian-hua-hao-ma-d-ya2x/
 
 ### 2. IP 地址划分
 

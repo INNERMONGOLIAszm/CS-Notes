@@ -330,11 +330,11 @@ public int maxAreaOfIsland(int[][] grid) {
     return maxArea;
 }
 
-private int dfs(int[][] grid, int r, int c) {
+private int dfs(int[][] grid, int r, int c) {  //每个点的可达数量最大值
     if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == 0) {
         return 0;
     }
-    grid[r][c] = 0;
+    grid[r][c] = 0; //去过的地方标记为1
     int area = 1;
     for (int[] d : direction) {
         area += dfs(grid, r + d[0], c + d[1]);
@@ -383,7 +383,7 @@ public int numIslands(char[][] grid) {
     return islandsNum;
 }
 
-private void dfs(char[][] grid, int i, int j) {
+private void dfs(char[][] grid, int i, int j) {  //找到一个岛，并把到的所有区域设置为1
     if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0') {
         return;
     }
@@ -399,6 +399,7 @@ private void dfs(char[][] grid, int i, int j) {
 547\. Friend Circles (Medium)
 
 [Leetcode](https://leetcode.com/problems/friend-circles/description/) / [力扣](https://leetcode-cn.com/problems/friend-circles/description/)
+https://leetcode-cn.com/problems/number-of-provinces/
 
 ```html
 Input:
@@ -418,10 +419,10 @@ The 2nd student himself is in a friend circle. So return 2.
 private int n;
 
 public int findCircleNum(int[][] M) {
-    n = M.length;
+    n = M.length; //城市的数量
     int circleNum = 0;
-    boolean[] hasVisited = new boolean[n];
-    for (int i = 0; i < n; i++) {
+    boolean[] hasVisited = new boolean[n]; //已经分过组的城市
+    for (int i = 0; i < n; i++) { //把每一个城市都找一遍
         if (!hasVisited[i]) {
             dfs(M, i, hasVisited);
             circleNum++;
@@ -430,7 +431,7 @@ public int findCircleNum(int[][] M) {
     return circleNum;
 }
 
-private void dfs(int[][] M, int i, boolean[] hasVisited) {
+private void dfs(int[][] M, int i, boolean[] hasVisited) { //将与第i个城市相连的城市标记为ture
     hasVisited[i] = true;
     for (int k = 0; k < n; k++) {
         if (M[i][k] == 1 && !hasVisited[k]) {
@@ -477,15 +478,15 @@ public void solve(char[][] board) {
     n = board[0].length;
 
     for (int i = 0; i < m; i++) {
-        dfs(board, i, 0);
-        dfs(board, i, n - 1);
+        dfs(board, i, 0);  //第一列
+        dfs(board, i, n - 1);  //第二列
     }
     for (int i = 0; i < n; i++) {
-        dfs(board, 0, i);
-        dfs(board, m - 1, i);
+        dfs(board, 0, i);  //第一行
+        dfs(board, m - 1, i); //最后一行 保证边界上的O不被填充
     }
 
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {  //
         for (int j = 0; j < n; j++) {
             if (board[i][j] == 'T') {
                 board[i][j] = 'O';
@@ -496,7 +497,7 @@ public void solve(char[][] board) {
     }
 }
 
-private void dfs(char[][] board, int r, int c) {
+private void dfs(char[][] board, int r, int c) { //将O的位置用T来填充
     if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] != 'O') {
         return;
     }
@@ -548,22 +549,21 @@ public List<List<Integer>> pacificAtlantic(int[][] matrix) {
     boolean[][] canReachA = new boolean[m][n];
 
     for (int i = 0; i < m; i++) {
-        dfs(i, 0, canReachP);
-        dfs(i, n - 1, canReachA);
+        dfs(i, 0, canReachP); //太平洋P，大西洋A
+        dfs(i, n - 1, canReachA);  //左右
     }
     for (int i = 0; i < n; i++) {
         dfs(0, i, canReachP);
-        dfs(m - 1, i, canReachA);
+        dfs(m - 1, i, canReachA); //上下
     }
 
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            if (canReachP[i][j] && canReachA[i][j]) {
+            if (canReachP[i][j] && canReachA[i][j]) {  //canReachP是能到达大西洋的，A是能到达太平洋的
                 ret.add(Arrays.asList(i, j));
             }
         }
     }
-
     return ret;
 }
 
@@ -576,7 +576,7 @@ private void dfs(int r, int c, boolean[][] canReach) {
         int nextR = d[0] + r;
         int nextC = d[1] + c;
         if (nextR < 0 || nextR >= m || nextC < 0 || nextC >= n
-                || matrix[r][c] > matrix[nextR][nextC]) {
+                || matrix[r][c] > matrix[nextR][nextC]) { //比当前值大的点不行。
 
             continue;
         }

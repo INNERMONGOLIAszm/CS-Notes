@@ -651,31 +651,31 @@ return ["255.255.11.135", "255.255.111.35"].
 
 ```java
 public List<String> restoreIpAddresses(String s) {
-    List<String> addresses = new ArrayList<>();
-    StringBuilder tempAddress = new StringBuilder();
+    List<String> addresses = new ArrayList<>();  //最终用于保存的结果
+    StringBuilder tempAddress = new StringBuilder(); //某个结果
     doRestore(0, tempAddress, addresses, s);
     return addresses;
 }
 
 private void doRestore(int k, StringBuilder tempAddress, List<String> addresses, String s) {
     if (k == 4 || s.length() == 0) {
-        if (k == 4 && s.length() == 0) {
+        if (k == 4 && s.length() == 0) { //k代表进行到了第k个.XXXX.
             addresses.add(tempAddress.toString());
         }
-        return;
+        return; //切到了4个，但是s还有。s已经切完了，但是不够4个，或者超出了4个。返回//剪断
     }
-    for (int i = 0; i < s.length() && i <= 2; i++) {
-        if (i != 0 && s.charAt(0) == '0') {
-            break;
+    for (int i = 0; i < s.length() && i <= 2; i++) {  //i <= 2确保是3位数。三种不同的长度都试一下。
+        if (i != 0 && s.charAt(0) == '0') { //除了一个0，其他以0开头的都跳出
+            break; //剪断
         }
         String part = s.substring(0, i + 1);
         if (Integer.valueOf(part) <= 255) {
-            if (tempAddress.length() != 0) {
+            if (tempAddress.length() != 0) {  //如果tempAddress里面已经存过东西了，加.part
                 part = "." + part;
             }
             tempAddress.append(part);
-            doRestore(k + 1, tempAddress, addresses, s.substring(i + 1));
-            tempAddress.delete(tempAddress.length() - part.length(), tempAddress.length());
+            doRestore(k + 1, tempAddress, addresses, s.substring(i + 1)); //继续i + 1之后的
+            tempAddress.delete(tempAddress.length() - part.length(), tempAddress.length()); //保持长度
         }
     }
 }
@@ -719,7 +719,7 @@ public boolean exist(char[][] board, String word) {
 
     for (int r = 0; r < m; r++) {
         for (int c = 0; c < n; c++) {
-            if (backtracking(0, r, c, hasVisited, board, word)) {
+            if (backtracking(0, r, c, hasVisited, board, word)) {  //某个位置上能找到一条链路
                 return true;
             }
         }
@@ -729,11 +729,11 @@ public boolean exist(char[][] board, String word) {
 }
 
 private boolean backtracking(int curLen, int r, int c, boolean[][] visited, final char[][] board, final String word) {
-    if (curLen == word.length()) {
+    if (curLen == word.length()) { //找到了一条路
         return true;
     }
     if (r < 0 || r >= m || c < 0 || c >= n
-            || board[r][c] != word.charAt(curLen) || visited[r][c]) {
+            || board[r][c] != word.charAt(curLen) || visited[r][c]) {  //哪些位置不能走
 
         return false;
     }
@@ -746,11 +746,12 @@ private boolean backtracking(int curLen, int r, int c, boolean[][] visited, fina
         }
     }
 
-    visited[r][c] = false;
+    visited[r][c] = false; //
 
-    return false;
+    return false; //当前的i,j没有任何一条路
 }
 ```
+https://leetcode-cn.com/problems/word-search/solution/zai-er-wei-ping-mian-shang-shi-yong-hui-su-fa-pyth/
 
 ### 4. 输出二叉树中所有从根到叶子的路径
 

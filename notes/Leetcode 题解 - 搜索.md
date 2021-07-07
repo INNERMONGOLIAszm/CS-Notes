@@ -774,11 +774,11 @@ https://leetcode-cn.com/problems/word-search/solution/zai-er-wei-ping-mian-shang
 ```java
 
 public List<String> binaryTreePaths(TreeNode root) {
-    List<String> paths = new ArrayList<>();
+    List<String> paths = new ArrayList<>(); //用来储存路径
     if (root == null) {
         return paths;
     }
-    List<Integer> values = new ArrayList<>();
+    List<Integer> values = new ArrayList<>(); //用来储存某一条路径
     backtracking(root, values, paths);
     return paths;
 }
@@ -789,7 +789,7 @@ private void backtracking(TreeNode node, List<Integer> values, List<String> path
     }
     values.add(node.val);
     if (isLeaf(node)) {
-        paths.add(buildPath(values));
+        paths.add(buildPath(values)); //将某个values的路径转为字符格式
     } else {
         backtracking(node.left, values, paths);
         backtracking(node.right, values, paths);
@@ -801,7 +801,7 @@ private boolean isLeaf(TreeNode node) {
     return node.left == null && node.right == null;
 }
 
-private String buildPath(List<Integer> values) {
+private String buildPath(List<Integer> values) { //将List数字的路径,生成["1->2->5", "1->3"]这样的形式。
     StringBuilder str = new StringBuilder();
     for (int i = 0; i < values.size(); i++) {
         str.append(values.get(i));
@@ -809,7 +809,7 @@ private String buildPath(List<Integer> values) {
             str.append("->");
         }
     }
-    return str.toString();
+    return str.toString();//StringBuilder类型得转成String
 }
 ```
 
@@ -833,8 +833,8 @@ private String buildPath(List<Integer> values) {
 
 ```java
 public List<List<Integer>> permute(int[] nums) {
-    List<List<Integer>> permutes = new ArrayList<>();
-    List<Integer> permuteList = new ArrayList<>();
+    List<List<Integer>> permutes = new ArrayList<>(); //最终的结果
+    List<Integer> permuteList = new ArrayList<>();  //结果当中的某一个
     boolean[] hasVisited = new boolean[nums.length];
     backtracking(permuteList, permutes, hasVisited, nums);
     return permutes;
@@ -853,7 +853,7 @@ private void backtracking(List<Integer> permuteList, List<List<Integer>> permute
         permuteList.add(nums[i]);
         backtracking(permuteList, permutes, visited, nums);
         permuteList.remove(permuteList.size() - 1);
-        visited[i] = false;
+        visited[i] = false; //每次设为true又设置为false
     }
 }
 ```
@@ -904,6 +904,7 @@ private void backtracking(List<Integer> permuteList, List<List<Integer>> permute
     }
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/124802104-2b4ed680-df8a-11eb-8ba9-0c0fa88faf0a.png)
 
 ### 7. 组合
 
@@ -932,11 +933,11 @@ public List<List<Integer>> combine(int n, int k) {
 }
 
 private void backtracking(List<Integer> combineList, List<List<Integer>> combinations, int start, int k, final int n) {
-    if (k == 0) {
+    if (k == 0) { //K代表还需要多少个数组合
         combinations.add(new ArrayList<>(combineList));
         return;
     }
-    for (int i = start; i <= n - k + 1; i++) {  // 剪枝
+    for (int i = start; i <= n - k + 1; i++) {  // 剪枝。k从1开始，所以+1
         combineList.add(i);
         backtracking(combineList, combinations, i + 1, k - 1, n);
         combineList.remove(combineList.size() - 1);
@@ -973,7 +974,7 @@ private void backtracking(List<Integer> tempCombination, List<List<Integer>> com
     for (int i = start; i < candidates.length; i++) {
         if (candidates[i] <= target) {
             tempCombination.add(candidates[i]);
-            backtracking(tempCombination, combinations, i, target - candidates[i], candidates);
+            backtracking(tempCombination, combinations, i, target - candidates[i], candidates); //这个是i，所以才能222222的连续加
             tempCombination.remove(tempCombination.size() - 1);
         }
     }

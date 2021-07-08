@@ -1055,7 +1055,7 @@ public List<List<Integer>> combinationSum3(int k, int n) {
 private void backtracking(int k, int n, int start,
                           List<Integer> tempCombination, List<List<Integer>> combinations) {
 
-    if (k == 0 && n == 0) {
+    if (k == 0 && n == 0) {  //k还需要组合的数字，剩余的需要被加的数值
         combinations.add(new ArrayList<>(tempCombination));
         return;
     }
@@ -1064,7 +1064,7 @@ private void backtracking(int k, int n, int start,
     }
     for (int i = start; i <= 9; i++) {
         tempCombination.add(i);
-        backtracking(k - 1, n - i, i + 1, tempCombination, combinations);
+        backtracking(k - 1, n - i, i + 1, tempCombination, combinations); //只能从最小的往大加，[1,3,2]不存在，不与[1,2,3]冲突
         tempCombination.remove(tempCombination.size() - 1);
     }
 }
@@ -1091,7 +1091,7 @@ public List<List<Integer>> subsets(int[] nums) {
 private void backtracking(int start, List<Integer> tempSubset, List<List<Integer>> subsets,
                           final int size, final int[] nums) {
 
-    if (tempSubset.size() == size) {
+    if (tempSubset.size() == size) {  //size是子集里面有几个数
         subsets.add(new ArrayList<>(tempSubset));
         return;
     }
@@ -1180,12 +1180,12 @@ public List<List<String>> partition(String s) {
 }
 
 private void doPartition(String s, List<List<String>> partitions, List<String> tempPartition) {
-    if (s.length() == 0) {
+    if (s.length() == 0) { //s是目前需要分割的字符串
         partitions.add(new ArrayList<>(tempPartition));
         return;
     }
     for (int i = 0; i < s.length(); i++) {
-        if (isPalindrome(s, 0, i)) {
+        if (isPalindrome(s, 0, i)) { //从头开始往后，切割的位置["a","a","b"],["aa","b"]
             tempPartition.add(s.substring(0, i + 1));
             doPartition(s.substring(i + 1), partitions, tempPartition);
             tempPartition.remove(tempPartition.size() - 1);

@@ -70,7 +70,7 @@ public int climbStairs(int n) {
     if (n <= 2) {
         return n;
     }
-    int pre2 = 1, pre1 = 2;
+    int pre2 = 1, pre1 = 2;  //dp[1]=1，dp[2]=2；
     for (int i = 2; i < n; i++) {
         int cur = pre1 + pre2;
         pre2 = pre1;
@@ -100,13 +100,16 @@ public int climbStairs(int n) {
 public int rob(int[] nums) {
     int pre2 = 0, pre1 = 0;
     for (int i = 0; i < nums.length; i++) {
-        int cur = Math.max(pre2 + nums[i], pre1);
+        int cur = Math.max(pre2 + nums[i], pre1);  //当i=1时，Math.max(0 + nums[1], pre1=nums[0]);
         pre2 = pre1;
         pre1 = cur;
     }
     return pre1;
 }
 ```
+对于第 k~(k>2)间房屋，有两个选项：
+偷窃第 k 间房屋，那么就不能偷窃第 k-1 间房屋，偷窃总金额为前 k-2间房屋的最高总金额与第 kk 间房屋的金额之和。
+不偷窃第 k间房屋，偷窃总金额为前 k-1间房屋的最高总金额。
 
 ### 3. 强盗在环形街区抢劫
 
@@ -123,7 +126,7 @@ public int rob(int[] nums) {
     if (n == 1) {
         return nums[0];
     }
-    return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1));
+    return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1)); //考虑是从第一个开始，还是从第二个开始
 }
 
 private int rob(int[] nums, int first, int last) {
@@ -187,22 +190,31 @@ public int minPathSum(int[][] grid) {
         return 0;
     }
     int m = grid.length, n = grid[0].length;
-    int[] dp = new int[n];
+    int[] dp = new int[n];  //列的长度
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            if (j == 0) {
+            if (j == 0) { //第一列
                 dp[j] = dp[j];        // 只能从上侧走到该位置
-            } else if (i == 0) {
+            } else if (i == 0) {  //第一行
                 dp[j] = dp[j - 1];    // 只能从左侧走到该位置
             } else {
-                dp[j] = Math.min(dp[j - 1], dp[j]);
+                dp[j] = Math.min(dp[j - 1], dp[j]);  //dp[j]代表上一次列的元素，dp[j - 1]代行的元素
             }
-            dp[j] += grid[i][j];
+            dp[j] += grid[i][j]; //加当前值
         }
     }
     return dp[n - 1];
 }
 ```
+创建二维数组 \textit{dp}dp，与原始网格的大小相同，\textit{dp}[i][j]dp[i][j] 表示从左上角出发到 (i,j)(i,j) 位置的最小路径和。显然，\textit{dp}[0][0]=\textit{grid}[0][0]dp[0][0]=grid[0][0]。对于 \textit{dp}dp 中的其余元素，通过以下状态转移方程计算元素值。
+
+当 i>0i>0 且 j=0j=0 时，\textit{dp}[i][0]=\textit{dp}[i-1][0]+\textit{grid}[i][0]dp[i][0]=dp[i−1][0]+grid[i][0]。
+
+当 i=0i=0 且 j>0j>0 时，\textit{dp}[0][j]=\textit{dp}[0][j-1]+\textit{grid}[0][j]dp[0][j]=dp[0][j−1]+grid[0][j]。
+
+当 i>0i>0 且 j>0j>0 时，\textit{dp}[i][j]=\min(\textit{dp}[i-1][j],\textit{dp}[i][j-1])+\textit{grid}[i][j]dp[i][j]=min(dp[i−1][j],dp[i][j−1])+grid[i][j]。
+
+最后得到 \textit{dp}[m-1][n-1]dp[m−1][n−1] 的值即为从网格左上角到网格右下角的最小路径和。
 
 ### 2. 矩阵的总路径数
 

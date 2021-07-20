@@ -206,15 +206,25 @@ public int minPathSum(int[][] grid) {
     return dp[n - 1];
 }
 ```
-创建二维数组 \textit{dp}dp，与原始网格的大小相同，\textit{dp}[i][j]dp[i][j] 表示从左上角出发到 (i,j)(i,j) 位置的最小路径和。显然，\textit{dp}[0][0]=\textit{grid}[0][0]dp[0][0]=grid[0][0]。对于 \textit{dp}dp 中的其余元素，通过以下状态转移方程计算元素值。
 
-当 i>0i>0 且 j=0j=0 时，\textit{dp}[i][0]=\textit{dp}[i-1][0]+\textit{grid}[i][0]dp[i][0]=dp[i−1][0]+grid[i][0]。
+```java
+class Solution {
+    public int minPathSum(int[][] grid) {
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(i == 0 && j == 0) continue;
+                else if(i == 0)  grid[i][j] = grid[i][j - 1] + grid[i][j];
+                else if(j == 0)  grid[i][j] = grid[i - 1][j] + grid[i][j];
+                else grid[i][j] = Math.min(grid[i - 1][j], grid[i][j - 1]) + grid[i][j];
+            }
+        }
+        return grid[grid.length - 1][grid[0].length - 1];
+    }
+}
+```
+https://leetcode-cn.com/problems/minimum-path-sum/solution/zui-xiao-lu-jing-he-dong-tai-gui-hua-gui-fan-liu-c/
+![image](https://user-images.githubusercontent.com/47047330/126330479-9187931f-ccb2-45a4-b685-276228368429.png)
 
-当 i=0i=0 且 j>0j>0 时，\textit{dp}[0][j]=\textit{dp}[0][j-1]+\textit{grid}[0][j]dp[0][j]=dp[0][j−1]+grid[0][j]。
-
-当 i>0i>0 且 j>0j>0 时，\textit{dp}[i][j]=\min(\textit{dp}[i-1][j],\textit{dp}[i][j-1])+\textit{grid}[i][j]dp[i][j]=min(dp[i−1][j],dp[i][j−1])+grid[i][j]。
-
-最后得到 \textit{dp}[m-1][n-1]dp[m−1][n−1] 的值即为从网格左上角到网格右下角的最小路径和。
 
 ### 2. 矩阵的总路径数
 
@@ -253,6 +263,22 @@ public int uniquePaths(int m, int n) {
 }
 ```
 
+```java
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] result=new int[m][n];
+        for(int i=0;i<m;i++) result[i][0]=1;
+        for(int j=0;j<n;j++) result[0][j]=1;
+        for(int i=1;i<m;i++){
+            for(int j=1;j<n;j++){
+                result[i][j]=result[i-1][j]+result[i][j-1];
+            }
+        }
+        return result[m-1][n-1];
+    }
+}
+```
+
 ## 数组区间
 
 ### 1. 数组区间和
@@ -279,7 +305,7 @@ class NumArray {
     public NumArray(int[] nums) {
         sums = new int[nums.length + 1];
         for (int i = 1; i <= nums.length; i++) {
-            sums[i] = sums[i - 1] + nums[i - 1];
+            sums[i] = sums[i - 1] + nums[i - 1];  //sums[i]中的i为数组的第多少个元素
         }
     }
 

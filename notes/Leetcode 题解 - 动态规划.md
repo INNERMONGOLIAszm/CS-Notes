@@ -396,6 +396,8 @@ public int integerBreak(int n) {
     return dp[n];
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/126646767-ca21cd7b-9238-4912-8a8b-fe0c25d9d0cb.png)
+
 
 ### 2. 按平方数来分割整数
 
@@ -435,6 +437,25 @@ private List<Integer> generateSquareList(int n) {
 }
 ```
 
+```java
+https://leetcode-cn.com/problems/perfect-squares/solution/wan-quan-ping-fang-shu-by-leetcode-solut-t99c/
+![image](https://user-images.githubusercontent.com/47047330/126644973-7aa3dc54-ca52-4613-9b68-e5edbbb09214.png)
+
+class Solution {
+    public int numSquares(int n) {
+        int[] f = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            int minn = Integer.MAX_VALUE;
+            for (int j = 1; j * j <= i; j++) {
+                minn = Math.min(minn, f[i - j * j]);
+            }
+            f[i] = minn + 1;
+        }
+        return f[n];
+    }
+}
+```
+
 ### 3. 分割整数构成字母字符串
 
 91\. Decode Ways (Medium)
@@ -467,6 +488,28 @@ public int numDecodings(String s) {
     }
     return dp[n];
 }
+```
+
+```java
+class Solution {
+    public int numDecodings(String s) {
+        int n = s.length();
+        int[] f = new int[n + 1];
+        f[0] = 1;
+        for (int i = 1; i <= n; ++i) {
+            if (s.charAt(i - 1) != '0') {
+                f[i] += f[i - 1];
+            }
+            if (i > 1 && s.charAt(i - 2) != '0' && ((s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0') <= 26)) {
+                f[i] += f[i - 2];
+            }
+        }
+        return f[n];
+    }
+}
+
+//作者：LeetCode-Solution
+//链接：https://leetcode-cn.com/problems/decode-ways/solution/jie-ma-fang-fa-by-leetcode-solution-p8np/
 ```
 
 ## 最长递增子序列

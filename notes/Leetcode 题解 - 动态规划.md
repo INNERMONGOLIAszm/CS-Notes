@@ -855,6 +855,7 @@ private int computeArraySum(int[] nums) {
     return sum;
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/126852244-037e8446-6d8a-4d54-b85e-c1cca498ee6c.png)
 
 ### 2. 改变一组数的正负号使得它们的和为一给定数
 
@@ -1013,6 +1014,27 @@ public int coinChange(int[] coins, int amount) {
     return dp[amount] == 0 ? -1 : dp[amount];
 }
 ```
+```java
+public class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int max = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];  //dp[amount]代表amount大小的额度能够，最少被几张钞票表示
+    }
+}
+```
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/coin-change/solution/322-ling-qian-dui-huan-by-leetcode-solution/
+
 
 ### 5. 找零钱的硬币数组合
 

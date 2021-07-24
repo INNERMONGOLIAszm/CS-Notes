@@ -436,11 +436,10 @@ private List<Integer> generateSquareList(int n) {
     return squareList;
 }
 ```
-
-```java
 https://leetcode-cn.com/problems/perfect-squares/solution/wan-quan-ping-fang-shu-by-leetcode-solut-t99c/
 ![image](https://user-images.githubusercontent.com/47047330/126644973-7aa3dc54-ca52-4613-9b68-e5edbbb09214.png)
 
+```java
 class Solution {
     public int numSquares(int n) {
         int[] f = new int[n + 1];
@@ -645,6 +644,8 @@ public int findLongestChain(int[][] pairs) {
     return Arrays.stream(dp).max().orElse(0);
 }
 ```
+![image](https://user-images.githubusercontent.com/47047330/126794095-be50a5f6-6980-4986-8390-0fe423e9615f.png)
+
 
 ### 3. 最长摆动子序列
 
@@ -664,6 +665,8 @@ There are several subsequences that achieve this length. One is [1,17,10,13,10,1
 Input: [1,2,3,4,5,6,7,8,9]
 Output: 2
 ```
+https://leetcode-cn.com/problems/wiggle-subsequence/solution/tan-xin-si-lu-qing-xi-er-zheng-que-de-ti-jie-by-lg/
+![image](https://user-images.githubusercontent.com/47047330/126798240-1c21b8c0-ce81-4a03-a643-b269016341cb.png)
 
 要求：使用 O(N) 时间复杂度求解。
 
@@ -754,11 +757,11 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
     int[][] dp = new int[N + 1][W + 1];
     for (int i = 1; i <= N; i++) {
         int w = weights[i - 1], v = values[i - 1];
-        for (int j = 1; j <= W; j++) {
+        for (int j = 1; j <= W; j++) { //不超过某一个j总体积情况下，能获取的最大价值
             if (j >= w) {
                 dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - w] + v);
             } else {
-                dp[i][j] = dp[i - 1][j];
+                dp[i][j] = dp[i - 1][j];  //else代表无法存进去。只能是上一个的。
             }
         }
     }

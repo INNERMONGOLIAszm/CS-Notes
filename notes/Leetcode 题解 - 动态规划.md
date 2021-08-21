@@ -777,7 +777,7 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/9ae89f16-7905-4a6f-88a2-874b4cac91f4.jpg" width="300px"> </div><br>
 
-因为 dp[j-w] 表示 dp[i-1][j-w]，因此不能先求 dp[i][j-w]，防止将 dp[i-1][j-w] 覆盖。也就是说要先计算 dp[i][j] 再计算 dp[i][j-w]，在程序实现时需要按倒序来循环求解。
+因为 dp[j-w] 表示 dp[i-1][j-w]，因此不能先求 dp[i][j-w]，防止将 dp[i-1][j-w] 覆盖。也就是说要先计算 dp[i][j] 再计算 dp[i][j-w]，在程序实现时需要按倒序来循环求解。（自己的理解：计算dp[i][j-w]时，需要用到dp[i-1][j-w]。因为dp[j-w]都可以表示这两者。如果按照从左往右计算，计算出dp[i][j-w]就相当于覆盖了 dp[i-1][j-w]，那么后面需要用dp[i-1][j-w]的值时其实用的是dp[i][j-w]。）
 
 ```java
 public int knapsack(int W, int N, int[] weights, int[] values) {
@@ -855,6 +855,7 @@ private int computeArraySum(int[] nums) {
     return sum;
 }
 ```
+下图填充的过程为，从右到左，从上到下的填充。
 ![image](https://user-images.githubusercontent.com/47047330/126852244-037e8446-6d8a-4d54-b85e-c1cca498ee6c.png)
 
 ### 2. 改变一组数的正负号使得它们的和为一给定数
@@ -944,7 +945,7 @@ Output: 4
 Explanation: There are totally 4 strings can be formed by the using of 5 0s and 3 1s, which are "10","0001","1","0"
 ```
 
-这是一个多维费用的 0-1 背包问题，有两个背包大小，0 的数量和 1 的数量。
+这是一个多维费用的 0-1 背包问题，有两个背包大小，0 的数量和 1 的数量。（自己的理解：其中dp[m][n]代表m个0和n个1能构成的，最多的子集数量。）
 
 ```java
 public int findMaxForm(String[] strs, int m, int n) {
@@ -963,7 +964,7 @@ public int findMaxForm(String[] strs, int m, int n) {
         }
         for (int i = m; i >= zeros; i--) {
             for (int j = n; j >= ones; j--) {
-                dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);  //zeros是总共的0数量，ones是总共的1数量。（分别判断zeros和ones放还是不放）
             }
         }
     }
@@ -1019,7 +1020,7 @@ public class Solution {
     public int coinChange(int[] coins, int amount) {
         int max = amount + 1;
         int[] dp = new int[amount + 1];
-        Arrays.fill(dp, max);
+        Arrays.fill(dp, max); //用max填充dp
         dp[0] = 0;
         for (int i = 1; i <= amount; i++) {
             for (int j = 0; j < coins.length; j++) {
@@ -1063,7 +1064,7 @@ public int change(int amount, int[] coins) {
     dp[0] = 1;
     for (int coin : coins) {
         for (int i = coin; i <= amount; i++) {
-            dp[i] += dp[i - coin];
+            dp[i] += dp[i - coin];  //由于不需要最大的硬币数量。只需要统计方法。所以不需要判断max(dp[i - coin]+1,和dp[i])
         }
     }
     return dp[amount];
@@ -1098,10 +1099,10 @@ public boolean wordBreak(String s, List<String> wordDict) {
     boolean[] dp = new boolean[n + 1];
     dp[0] = true;
     for (int i = 1; i <= n; i++) {
-        for (String word : wordDict) {   // 对物品的迭代应该放在最里层
+        for (String word : wordDict) {   // 对物品的迭代应该放在最里层  //注：每个i都依次判断每个word是否能拼在前面
             int len = word.length();
-            if (len <= i && word.equals(s.substring(i - len, i))) {
-                dp[i] = dp[i] || dp[i - len];
+            if (len <= i && word.equals(s.substring(i - len, i))) { //判断当前的word的长度能否放到容量为i的背包里，并且是否词匹配
+                dp[i] = dp[i] || dp[i - len]; //这个不太懂
             }
         }
     }
@@ -1141,11 +1142,11 @@ public int combinationSum4(int[] nums, int target) {
         return 0;
     }
     int[] maximum = new int[target + 1];
-    maximum[0] = 1;
-    Arrays.sort(nums);
-    for (int i = 1; i <= target; i++) {
-        for (int j = 0; j < nums.length && nums[j] <= i; j++) {
-            maximum[i] += maximum[i - nums[j]];
+    maximum[0] = 1;  //总和为0的组合方式有一种（为0的一种）
+    Arrays.sort(nums);  //这个排序非常关键
+    for (int i = 1; i <= target; i++) {  //容量在外
+        for (int j = 0; j < nums.length && nums[j] <= i; j++) {  //物体在内
+            maximum[i] += maximum[i - nums[j]];  //不需要找最值，所以不需要max
         }
     }
     return maximum[target];
@@ -1239,19 +1240,41 @@ public int maxProfit(int[] prices) {
     int secondBuy = Integer.MIN_VALUE, secondSell = 0;
     for (int curPrice : prices) {
         if (firstBuy < -curPrice) {
-            firstBuy = -curPrice;
+            firstBuy = -curPrice;  // 第一次买 -curPrice
         }
         if (firstSell < firstBuy + curPrice) {
-            firstSell = firstBuy + curPrice;
+            firstSell = firstBuy + curPrice;  //第一次卖firstBuy + curPrice
         }
         if (secondBuy < firstSell - curPrice) {
-            secondBuy = firstSell - curPrice;
+            secondBuy = firstSell - curPrice;  //第一次交易完成后第二次买
         }
         if (secondSell < secondBuy + curPrice) {
-            secondSell = secondBuy + curPrice;
+            secondSell = secondBuy + curPrice;  //第二次交易完成
         }
     }
     return secondSell;
+}
+```
+改写后的方法：
+由于我们最多可以完成两笔交易，因此在任意一天结束之后，我们会处于以下五个状态中的一种：
+未进行过任何操作；
+只进行过一次买操作；
+进行了一次买操作和一次卖操作，即完成了一笔交易；
+在完成了一笔交易的前提下，进行了第二次买操作；
+完成了全部两笔交易。
+链接：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/solution/mai-mai-gu-piao-de-zui-jia-shi-ji-iii-by-wrnt/
+
+```java
+public int maxProfit(int[] prices) {
+    int fstbuy = Integer.MIN_VALUE, fstsell = 0;
+    int secbuy = Integer.MIN_VALUE, secsell = 0;
+    for (int curPrice : prices) {
+        fstbuy = Math.max(fstbuy, -curPrice);			// 第一次买 -p
+        fstsell = Math.max(fstsell, fstbuy + curPrice);	// 第一次卖 fstbut + p
+        secbuy = Math.max(secbuy, fstsell - curPrice);	// 第一次卖了后现在买 fstsell - p
+        secsell = Math.max(secsell, secbuy + curPrice);	// 第二次买了后现在卖 secbuy + p
+    }
+    return secsell;
 }
 ```
 
@@ -1268,12 +1291,12 @@ public int maxProfit(int k, int[] prices) {
         int maxProfit = 0;
         for (int i = 1; i < n; i++) {
             if (prices[i] > prices[i - 1]) {
-                maxProfit += prices[i] - prices[i - 1];
+                maxProfit += prices[i] - prices[i - 1];  //普通股票问题，只对比相邻的两天
             }
         }
         return maxProfit;
     }
-    int[][] maxProfit = new int[k + 1][n];
+    int[][] maxProfit = new int[k + 1][n];  //在只进行k此交易下，第n天获得的最大利润
     for (int i = 1; i <= k; i++) {
         int localMax = maxProfit[i - 1][0] - prices[0];
         for (int j = 1; j < n; j++) {
@@ -1284,6 +1307,8 @@ public int maxProfit(int k, int[] prices) {
     return maxProfit[k][n - 1];
 }
 ```
+B站的视频：
+https://www.bilibili.com/video/BV13v411h7gX?from=search&seid=10007249874506795114
 
 ## 字符串编辑
 

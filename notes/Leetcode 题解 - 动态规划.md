@@ -1296,11 +1296,16 @@ public int maxProfit(int k, int[] prices) {
         }
         return maxProfit;
     }
-    int[][] maxProfit = new int[k + 1][n];  //在只进行k此交易下，第n天获得的最大利润
+    int[][] maxProfit = new int[k + 1][n];  //在只进行k次交易下，第n天获得的最大利润（为什么是k+1，可能有0次和K次）
     for (int i = 1; i <= k; i++) {
-        int localMax = maxProfit[i - 1][0] - prices[0];
+    //当前手上持有股票，初始情况下第一次交易，想持有，只能以第0天的价格买入
+        int localMax = maxProfit[i - 1][0] - prices[0]; //初始化第0天的不同次数的利润(local代表已经持有)
         for (int j = 1; j < n; j++) {
+        //第i比交易后，手上没有股票了，要么是j-1天手上就已经完成了i比交易不持有了
+        //要么是i-1次交易时手上还持有，第j天以prices[j]卖出了完成第i比交易后手上不持有
             maxProfit[i][j] = Math.max(maxProfit[i][j - 1], prices[j] + localMax);
+            //第i比交易后，手上还持有一只股票，要么是i-1次交易后手上已经持有了
+            //要么是i-1次交易后手上没持有，第i次交易以价格j买入持有
             localMax = Math.max(localMax, maxProfit[i - 1][j] - prices[j]);
         }
     }
@@ -1323,8 +1328,24 @@ Input: "sea", "eat"
 Output: 2
 Explanation: You need one step to make "sea" to "ea" and another step to make "eat" to "ea".
 ```
-
-可以转换为求两个字符串的最长公共子序列问题。
+https://leetcode-cn.com/problems/delete-operation-for-two-strings/solution/liang-chong-jie-fa-by-jason-2-34/
+可以转换为求两个字符串的最长公共子序列问题。如下：
+先找出word1与word2的最长公共子序列,其长度为len.
+步骤数 = word1.length + word2.length – 2 * 最长公共子序列的长度.
+例如:”sea”, “eat”
+最长公共子序列 为 ea.
+那么,步骤数 = 3 + 3 – 2*2 = 2.
+设word1(i)是长度为i的前缀串. 最后一个字符是word1[i-1]. 同理word2(j).
+设d[i][j]表示word1(i)与word2(j) 最长公共子序列 的长度.
+当i == 0 或 j == 0 时, 至少有一个空串.
+显然没有公共子序列. d[i][j] = 0;
+当i > 0 且 j > 0 时, 分情况讨论.
+当 word1[i-1] == word2[j-1] 时, 尾端两个字符相同.
+说明,公共子序列变长了. d[i][j] = d[i-1][j-1] + 1;
+当 word1[i-1] != word2[j-1] 时, 尾端两个字符不相同.
+说明,尾端字符对公共子序列没有贡献. 此时, 最长的公共子序列,要么是word1(i-1)与word2(j)构成的, 要么是word1(i)与word2(j-1)构成的.
+d[i][j] = max(d[i-1][j],d[i][j-1]).
+当i > 0 且 j > 0 时 , 最长公共子序列的长度就是这两种情况的值.
 
 ```java
 public int minDistance(String word1, String word2) {
@@ -1429,10 +1450,10 @@ public int minSteps(int n) {
 ```java
 public int minSteps(int n) {
     int[] dp = new int[n + 1];
-    int h = (int) Math.sqrt(n);
+    int h = (int) Math.sqrt(n); 
     for (int i = 2; i <= n; i++) {
-        dp[i] = i;
-        for (int j = 2; j <= h; j++) {
+        dp[i] = i;  //初始化，认为每一个数都得一次相加
+        for (int j = 2; j <= h; j++) {  //j是最大公约数
             if (i % j == 0) {
                 dp[i] = dp[j] + dp[i / j];
                 break;
@@ -1442,3 +1463,5 @@ public int minSteps(int n) {
     return dp[n];
 }
 ```
+下面的链接有详细的解答：
+https://leetcode-cn.com/problems/2-keys-keyboard/solution/c-dong-tai-gui-hua-kan-zhe-ge-jiu-gou-li-ptt9/

@@ -1145,30 +1145,30 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 class Trie {
 
     private class Node {
-        Node[] childs = new Node[26];
+        Node[] childs = new Node[26]; //Node[]类似于char[]这种的变量,node数组
         boolean isLeaf;
     }
 
-    private Node root = new Node();
-
+    private Node root = new Node();  //原始的根节点
+   //为什么要有一个空的构造方法
     public Trie() {
     }
 
     public void insert(String word) {
-        insert(word, root);
+        insert(word, root);  //分开写是为了做递归
     }
 
     private void insert(String word, Node node) {
-        if (node == null) return;
+        if (node == null) return; //这是初始判断条件(这行可以不用)
         if (word.length() == 0) {
             node.isLeaf = true;
-            return;
+            return; //这是递归结束的条件
         }
         int index = indexForChar(word.charAt(0));
         if (node.childs[index] == null) {
-            node.childs[index] = new Node();
+            node.childs[index] = new Node(); //新建了一个子Node()，里面有子Node()的childs
         }
-        insert(word.substring(1), node.childs[index]);
+        insert(word.substring(1), node.childs[index]);  //以前已经储存过这个节点
     }
 
     public boolean search(String word) {
@@ -1176,8 +1176,8 @@ class Trie {
     }
 
     private boolean search(String word, Node node) {
-        if (node == null) return false;
-        if (word.length() == 0) return node.isLeaf;
+        if (node == null) return false;  //遍历结束的条件
+        if (word.length() == 0) return node.isLeaf;  //遍历结束的条件
         int index = indexForChar(word.charAt(0));
         return search(word.substring(1), node.childs[index]);
     }
@@ -1187,8 +1187,8 @@ class Trie {
     }
 
     private boolean startWith(String prefix, Node node) {
-        if (node == null) return false;
-        if (prefix.length() == 0) return true;
+        if (node == null) return false; //这个是递归结束的条件
+        if (prefix.length() == 0) return true; //直接不需要用到isLeaf的属性了
         int index = indexForChar(prefix.charAt(0));
         return startWith(prefix.substring(1), node.childs[index]);
     }

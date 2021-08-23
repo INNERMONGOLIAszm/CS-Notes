@@ -52,7 +52,7 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 
 [Leetcode](https://leetcode.com/problems/count-primes/description/) / [力扣](https://leetcode-cn.com/problems/count-primes/description/)
 
-埃拉托斯特尼筛法在每次找到一个素数时，将能被素数整除的数排除掉。
+埃拉托斯特尼筛法在每次找到一个素数时，将能被素数整除的数排除掉。(如果一个数是素数，那么这个数的倍数一定不是素数)
 
 ```java
 public int countPrimes(int n) {
@@ -63,7 +63,7 @@ public int countPrimes(int n) {
             continue;
         }
         count++;
-        // 从 i * i 开始，因为如果 k < i，那么 k * i 在之前就已经被去除过了
+        // 从 i * i 开始(而不是1*i)，因为如果 k < i，那么 k * i (k倍的i)在之前就已经被去除过了。
         for (long j = (long) (i) * i; j < n; j += i) {
             notPrimes[(int) j] = true;
         }
@@ -71,6 +71,30 @@ public int countPrimes(int n) {
     return count;
 }
 ```
+
+```java
+class Solution {
+    public int countPrimes(int n) {
+        int ans = 0;
+        for (int i = 2; i < n; ++i) {
+            ans += isPrime(i) ? 1 : 0;
+        }
+        return ans;
+    }
+
+    public boolean isPrime(int x) {
+        for (int i = 2; i * i <= x; ++i) {
+            if (x % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/count-primes/solution/ji-shu-zhi-shu-by-leetcode-solution/
+
 
 ### 2. 最大公约数
 
@@ -185,8 +209,8 @@ public String toHex(int num) {
     if (num == 0) return "0";
     StringBuilder sb = new StringBuilder();
     while (num != 0) {
-        sb.append(map[num & 0b1111]);
-        num >>>= 4; // 因为考虑的是补码形式，因此符号位就不能有特殊的意义，需要使用无符号右移，左边填 0
+        sb.append(map[num & 0b1111]); //数的后四位保留，正好是除以16的余数
+        num >>>= 4; // 因为考虑的是补码形式，因此符号位就不能有特殊的意义，需要使用无符号右移，左边填 0(相当于除16取整)
     }
     return sb.reverse().toString();
 }
@@ -253,11 +277,11 @@ a = "11"
 b = "1"
 Return "100".
 ```
-
+leetcode题解：https://leetcode-cn.com/problems/add-binary/solution/hua-jie-suan-fa-67-er-jin-zhi-qiu-he-by-guanpengch/
 ```java
 public String addBinary(String a, String b) {
     int i = a.length() - 1, j = b.length() - 1, carry = 0;
-    StringBuilder str = new StringBuilder();
+    StringBuilder str = new StringBuilder();  //carry是进位的操作；
     while (carry == 1 || i >= 0 || j >= 0) {
         if (i >= 0 && a.charAt(i--) == '1') {
             carry++;
@@ -332,8 +356,8 @@ public int minMoves2(int[] nums) {
     Arrays.sort(nums);
     int move = 0;
     int l = 0, h = nums.length - 1;
-    while (l <= h) {
-        move += nums[h] - nums[l];
+    while (l <= h) {  
+        move += nums[h] - nums[l];  //如果是基数，代表有一次两个数相同。相减为0
         l++;
         h--;
     }
@@ -455,6 +479,24 @@ public boolean isPerfectSquare(int num) {
 ### 2. 3 的 n 次方
 
 326\. Power of Three (Easy)
+leetcode题解如下：https://leetcode-cn.com/problems/power-of-three/solution/3de-mi-by-leetcode/
+![image](https://user-images.githubusercontent.com/47047330/130485008-43103637-7bcf-4a7e-9dc7-a99aa1b4601e.png)
+
+```java
+public class Solution {
+    public boolean isPowerOfThree(int n) {
+        if (n < 1) {
+            return false;
+        }
+
+        while (n % 3 == 0) {
+            n /= 3;
+        }
+
+        return n == 1;
+    }
+}
+```
 
 [Leetcode](https://leetcode.com/problems/power-of-three/description/) / [力扣](https://leetcode-cn.com/problems/power-of-three/description/)
 
@@ -473,6 +515,7 @@ public boolean isPowerOfThree(int n) {
 ```html
 For example, given [1,2,3,4], return [24,12,8,6].
 ```
+动态图的链接：https://leetcode-cn.com/problems/product-of-array-except-self/solution/chu-zi-shen-yi-wai-shu-zu-de-cheng-ji-by-leetcode-/
 
 给定一个数组，创建一个新数组，新数组的每个元素为原始数组中除了该位置上的元素之外所有元素的乘积。
 
@@ -507,7 +550,17 @@ public int[] productExceptSelf(int[] nums) {
 Input: [1,2,3,4]
 Output: 24
 ```
+![image](https://user-images.githubusercontent.com/47047330/130492727-02673b35-964e-4bb4-8288-55704db149ec.png)
 
+```java
+class Solution {
+    public int maximumProduct(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        return Math.max(nums[0] * nums[1] * nums[n - 1], nums[n - 3] * nums[n - 2] * nums[n - 1]);
+    }
+}
+```
 ```java
 public int maximumProduct(int[] nums) {
     int max1 = Integer.MIN_VALUE, max2 = Integer.MIN_VALUE, max3 = Integer.MIN_VALUE, min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;

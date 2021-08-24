@@ -157,6 +157,10 @@ public int findMinArrowShots(int[][] points) {
 
 406\. Queue Reconstruction by Height(Medium)
 
+题解leetcode：https://leetcode-cn.com/problems/queue-reconstruction-by-height/solution/406-gen-ju-shen-gao-zhong-jian-dui-lie-java-xian-p/
+![image](https://user-images.githubusercontent.com/47047330/130631081-5b8ebda2-1c3a-4658-bb65-6e025718d854.png)
+
+
 [Leetcode](https://leetcode.com/problems/queue-reconstruction-by-height/description/) / [力扣](https://leetcode-cn.com/problems/queue-reconstruction-by-height/description/)
 
 ```html
@@ -252,7 +256,7 @@ Output: True
 public boolean canPlaceFlowers(int[] flowerbed, int n) {
     int len = flowerbed.length;
     int cnt = 0;
-    for (int i = 0; i < len && cnt < n; i++) {
+    for (int i = 0; i < len && cnt < n; i++) {  //这个地方没有cnt < n也行
         if (flowerbed[i] == 1) {
             continue;
         }
@@ -282,7 +286,7 @@ Return true.
 public boolean isSubsequence(String s, String t) {
     int index = -1;
     for (char c : s.toCharArray()) {
-        index = t.indexOf(c, index + 1);
+        index = t.indexOf(c, index + 1); //从指定的位置开始搜索。index+1是上次找到的下一个的位置
         if (index == -1) {
             return false;
         }
@@ -309,16 +313,16 @@ Explanation: You could modify the first 4 to 1 to get a non-decreasing array.
 
 ```java
 public boolean checkPossibility(int[] nums) {
-    int cnt = 0;
+    int cnt = 0; //修改的次数
     for (int i = 1; i < nums.length && cnt < 2; i++) {
         if (nums[i] >= nums[i - 1]) {
             continue;
         }
         cnt++;
         if (i - 2 >= 0 && nums[i - 2] > nums[i]) {
-            nums[i] = nums[i - 1];
+            nums[i] = nums[i - 1];  //让nums[i]满足要求，并且最小
         } else {
-            nums[i - 1] = nums[i];
+            nums[i - 1] = nums[i]; //只能改一次，所以nums[i - 1]只要满足情况就行
         }
     }
     return cnt <= 1;
@@ -332,6 +336,8 @@ public boolean checkPossibility(int[] nums) {
 53\. Maximum Subarray (Easy)
 
 [Leetcode](https://leetcode.com/problems/maximum-subarray/description/) / [力扣](https://leetcode-cn.com/problems/maximum-subarray/description/)
+![image](https://user-images.githubusercontent.com/47047330/130664619-dbbbd973-7e08-49ec-a24c-17e7180e15df.png)
+
 
 ```html
 For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
@@ -356,6 +362,7 @@ public int maxSubArray(int[] nums) {
 ## 11. 分隔字符串使同种字符出现在一起
 
 763\. Partition Labels (Medium)
+![image](https://user-images.githubusercontent.com/47047330/130672615-c4b74f57-2b51-49c3-b41d-6999d0ff12e7.png)
 
 [Leetcode](https://leetcode.com/problems/partition-labels/description/) / [力扣](https://leetcode-cn.com/problems/partition-labels/description/)
 

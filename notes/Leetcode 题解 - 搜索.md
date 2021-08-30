@@ -937,9 +937,10 @@ private void backtracking(List<Integer> combineList, List<List<Integer>> combina
         combinations.add(new ArrayList<>(combineList));
         return;
     }
-    for (int i = start; i <= n - k + 1; i++) {  // 剪枝。k从1开始，所以+1
+    //第一个节点只有1,2,3开头的，第二个节点只有2,3,4
+    for (int i = start; i <= n - k + 1; i++) {  // 剪枝。k从1开始，所以+1（4-2+1=3，刨除了4）
         combineList.add(i);
-        backtracking(combineList, combinations, i + 1, k - 1, n);
+        backtracking(combineList, combinations, i + 1, k - 1, n); //搜索的范围，两端都往内进一步。
         combineList.remove(combineList.size() - 1);
     }
 }
@@ -1020,7 +1021,7 @@ private void backtracking(List<Integer> tempCombination, List<List<Integer>> com
         if (candidates[i] <= target) {
             tempCombination.add(candidates[i]);
             hasVisited[i] = true;
-            backtracking(tempCombination, combinations, hasVisited, i + 1, target - candidates[i], candidates);
+            backtracking(tempCombination, combinations, hasVisited, i + 1, target - candidates[i], candidates); //每个数字在每个组合中只能使用一次。所以是 i + 1
             hasVisited[i] = false;
             tempCombination.remove(tempCombination.size() - 1);
         }
@@ -1055,11 +1056,11 @@ public List<List<Integer>> combinationSum3(int k, int n) {
 private void backtracking(int k, int n, int start,
                           List<Integer> tempCombination, List<List<Integer>> combinations) {
 
-    if (k == 0 && n == 0) {  //k还需要组合的数字，剩余的需要被加的数值
+    if (k == 0 && n == 0) {  //k还需要组合的数字，n是剩余的需要被加的数值
         combinations.add(new ArrayList<>(tempCombination));
         return;
     }
-    if (k == 0 || n == 0) {
+    if (k == 0 || n == 0) { //肢减
         return;
     }
     for (int i = start; i <= 9; i++) {
@@ -1083,7 +1084,7 @@ public List<List<Integer>> subsets(int[] nums) {
     List<List<Integer>> subsets = new ArrayList<>();
     List<Integer> tempSubset = new ArrayList<>();
     for (int size = 0; size <= nums.length; size++) {
-        backtracking(0, tempSubset, subsets, size, nums); // 不同的子集大小
+        backtracking(0, tempSubset, subsets, size, nums); // 不同的子集大小（比固定长度组合的问题，多了一个for循环）
     }
     return subsets;
 }
@@ -1108,7 +1109,7 @@ private void backtracking(int start, List<Integer> tempSubset, List<List<Integer
 90\. Subsets II (Medium)
 
 [Leetcode](https://leetcode.com/problems/subsets-ii/description/) / [力扣](https://leetcode-cn.com/problems/subsets-ii/description/)
-
+判断有多少种“切割”组和
 ```html
 For example,
 If nums = [1,2,2], a solution is:
@@ -1143,7 +1144,7 @@ private void backtracking(int start, List<Integer> tempSubset, List<List<Integer
         return;
     }
     for (int i = start; i < nums.length; i++) {
-        if (i != 0 && nums[i] == nums[i - 1] && !hasVisited[i - 1]) {
+        if (i != 0 && nums[i] == nums[i - 1] && !hasVisited[i - 1]) { //如果某个数和上一个重复了，且上一个没用过，那么支减。i==0用来判断另外的条件（比如头结点是否换不同的数，是否换完）
             continue;
         }
         tempSubset.add(nums[i]);

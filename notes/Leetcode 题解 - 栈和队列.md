@@ -16,7 +16,7 @@
 
 [Leetcode](https://leetcode.com/problems/implement-queue-using-stacks/description/) / [力扣](https://leetcode-cn.com/problems/implement-queue-using-stacks/description/)
 
-栈的顺序为后进先出，而队列的顺序为先进先出。使用两个栈实现队列，一个元素需要经过两个栈才能出队列，在经过第一个栈时元素顺序被反转，经过第二个栈时再次被反转，此时就是先进先出顺序。
+栈的顺序为后进先出，而队列的顺序为先进先出。使用两个栈实现队列，一个元素需要经过两个栈才能出队列，在经过第一个栈时元素顺序被反转，经过第二个栈时再次被反转，此时就是先进先出顺序。（这个是一波一波的来的）
 
 ```java
 class MyQueue {
@@ -59,6 +59,10 @@ class MyQueue {
 [Leetcode](https://leetcode.com/problems/implement-stack-using-queues/description/) / [力扣](https://leetcode-cn.com/problems/implement-stack-using-queues/description/)
 
 在将一个元素 x 插入队列时，为了维护原来的后进先出顺序，需要让 x 插入队列首部。而队列的默认插入顺序是队列尾部，因此在将 x 插入队列尾部之后，需要让除了 x 之外的所有元素出队列，再入队列。
+(自己的理解，这个是一个一个的来的)
+![image](https://user-images.githubusercontent.com/47047330/131635210-b3979398-7c5e-4918-a879-6b34c985cb3a.png)
+![image](https://user-images.githubusercontent.com/47047330/131635533-73edca28-e38c-439e-9485-9aed48e15163.png)
+
 
 ```java
 class MyStack {

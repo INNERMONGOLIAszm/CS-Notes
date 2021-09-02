@@ -139,7 +139,7 @@ public boolean isIsomorphic(String s, String t) {
     int[] preIndexOfT = new int[256];
     for (int i = 0; i < s.length(); i++) {
         char sc = s.charAt(i), tc = t.charAt(i);  //相同位置上的各自的字符
-        if (preIndexOfS[sc] != preIndexOfT[tc]) {  //两字符，上次储存的顺序是否一致
+        if (preIndexOfS[sc] != preIndexOfT[tc]) {  //两字符，上次储存的顺序是否一致（这次同一位置出现的，上次是不是也同一位置）
             return false;
         }
         preIndexOfS[sc] = i + 1; //把两个字符串当前的位置储存下来。

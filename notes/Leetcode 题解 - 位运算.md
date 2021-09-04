@@ -373,7 +373,7 @@ public boolean hasAlternatingBits(int n) {
 }
 ```
 
-## 10. 求一个数的补码
+## 10. 求一个数的补数（0101的补数是0010）
 
 476\. Number Complement (Easy)
 
